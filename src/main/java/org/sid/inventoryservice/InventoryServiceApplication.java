@@ -10,6 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,12 +26,13 @@ public class InventoryServiceApplication {
 		SpringApplication.run(InventoryServiceApplication.class, args);
 	}
 	@Bean
-	CommandLineRunner start(ProductRepository productRepository)
+	CommandLineRunner start(ProductRepository productRepository , RepositoryRestConfiguration repositoryRestConfiguration)
 	{
+		repositoryRestConfiguration.exposeIdsFor(Product.class) ;
 		return args -> {
-			productRepository.save(new Product(null , "Ordinateur" , 788 , 12)) ;
-			productRepository.save(new Product(null , "Imprimante" , 968 , 10)) ;
-			productRepository.save(new Product(null , "Smartphone" , 200 , 5)) ;
+			productRepository.save(new Product(null , "Ordinateur" , 788 , 12 , true)) ;
+			productRepository.save(new Product(null , "Imprimante" , 968 , 10 , false )) ;
+			productRepository.save(new Product(null , "Smartphone" , 200 , 5 , true)) ;
 			productRepository.findAll().forEach(p->
 			{
 				System.out.println(p.getName());
@@ -50,8 +53,10 @@ class Product{
 	private String name ;
 	private double price ;
 	private double quantity ;
+	private boolean promotion ;
 }
 @RepositoryRestResource
+@CrossOrigin("*")
 interface ProductRepository extends JpaRepository<Product,Long>{
 
 }
