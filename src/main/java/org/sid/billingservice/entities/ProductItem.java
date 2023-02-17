@@ -22,6 +22,6 @@ public class ProductItem {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     private  Bill bill ;
-    @Transient
+  @Transient
     private Product product ;
 }
